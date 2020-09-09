@@ -69,6 +69,8 @@ def demo_dict():
         print(key, value)
     print(temp_dict.keys())
     print(temp_dict.values())
+    temp_dict.get('c', 3)
+    print(temp_dict)
 
 
 def demo_test(temp_a, temp_list=[]):
