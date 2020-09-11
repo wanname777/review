@@ -93,6 +93,42 @@ def demo_mapping():
     print(frame3, type(frame3))
 
 
+def demo_sort():
+    frame = pd.DataFrame(np.arange(8).reshape((2, 4)),
+                         index=['three', 'one'],
+                         columns=['d', 'a', 'b', 'c'])
+    print(frame)
+    # sort_index包含许多参数，例如axis，ascending等
+    frame1 = frame.sort_index(axis=1, ascending=False)
+    print(frame1)
+    obj = pd.Series([4, np.nan, 7, np.nan, -3, 2])
+    # sort_values也有许多参数，比如by等,如果by的是一个列表形式，则会优先满足前一个标签的排序
+    obj1 = obj.sort_values()
+    print(obj1)
+    frame = pd.DataFrame({'b': [4, 7, -3, 2], 'a': [0, 1, 0, 1]})
+    frame1 = frame.sort_values(by=['b', 'a'])
+    print(frame1)
+
+
+def demo_rank():
+    obj = pd.Series([7, -5, 7, 4, 2, 0, 4])
+    print(obj)
+    obj_rank = obj.rank(method='first', ascending=False)
+    print(obj_rank)
+    temp_obj = pd.concat([obj, obj_rank], axis=1)
+    temp_obj.columns = ['value', 'rank']
+    print(temp_obj)
+
+
+def demo_value_counts():
+    data = pd.DataFrame({'Qu1': [1, 3, 4, 3, 4], 'Qu2': [2, 3, 1, 2, 3],
+                         'Qu3': [1, 5, 2, 4, 4]})
+    print(data)
+    # 奇怪的是这里必须是用apply方法，而且调用的函数不能加括号
+    # 这可能与value_counts只能用于Series有关
+    print(data.apply(pd.value_counts).fillna(0))
+
+
 if __name__ == '__main__':
     demo_series()
     demo_dataframe()
@@ -100,3 +136,6 @@ if __name__ == '__main__':
     demo_drop()
     demo_add()
     demo_mapping()
+    demo_sort()
+    demo_rank()
+    demo_value_counts()
