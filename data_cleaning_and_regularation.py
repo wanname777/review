@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 
 
+# cut、get_dummies、re方面未涉及
+
+
 def demo_dropna():
     # 对于dropna，默认的axis是0，how是any
     data = pd.DataFrame([[1., 6.5, 3.],
@@ -54,7 +57,7 @@ def demo_rename():
                         index=['Ohio', 'Colorado', 'New York'],
                         columns=['one', 'two', 'three', 'four'])
     print(data)
-    data.rename(index=str.title,columns=str.upper,inplace=True)
+    data.rename(index=str.title, columns=str.upper, inplace=True)
     print(data)
 
 
