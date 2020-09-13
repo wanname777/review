@@ -11,7 +11,7 @@ def demo_dropna():
                          [1., np.nan, np.nan],
                          [np.nan, np.nan, np.nan],
                          [np.nan, 6.5, 3.]])
-    print(data)
+    print(data, 111)
     data1 = data.dropna(axis=0, how='all')
     print(data1)
     data2 = data.dropna(thresh=2)
