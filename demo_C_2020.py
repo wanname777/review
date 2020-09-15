@@ -3,14 +3,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.preprocessing import StandardScaler
 
 
 def read():
-    data = pd.read_csv("D:/360安全浏览器下载/demo案例附件/data.csv", encoding="gbk")
-    print(data.head())
-    print(data.shape)
-    print(data.describe())
-    return data
+    temp_data = pd.read_csv("D:/360安全浏览器下载/demo案例附件/data.csv", encoding="gbk")
+    print(temp_data.head())
+    print(temp_data.shape)
+    print(temp_data.describe())
+    return temp_data
 
 
 def fill_nan(temp_data):
@@ -28,6 +32,24 @@ def set_ys(temp_data):
     return temp_data
 
 
+def preprocessing(temp_data):
+    xs = temp_data.iloc[:, 4:]
+    ys = temp_data.iloc[:, 3]
+    temp_x_train, temp_x_test, temp_y_train, temp_y_test = \
+        train_test_split(xs, ys, random_state=420)
+    temp_x_train.index = range(len(temp_x_train.index))
+    temp_y_train.index = range(len(temp_y_train.index))
+    temp_x_test.index = range(len(temp_x_test.index))
+    temp_y_test.index = range(len(temp_y_test.index))
+    print(temp_x_train)
+    print(temp_y_train)
+    # scale = StandardScaler()
+    # scale.fit(x_train)
+    # x_train=scale.transform(x_train)
+    # y_train=scale.transform(y_train)
+    return temp_x_train, temp_x_test, temp_y_train, temp_y_test
+
+
 if __name__ == '__main__':
     data = read()
     print(data.columns)
@@ -35,16 +57,20 @@ if __name__ == '__main__':
     data = set_ys(data)
     print(data.iloc[:, 3])
     new_data = data.copy()
-    xs = new_data.iloc[:, 4:]
-    ys = new_data.iloc[:, 3]
-    x_train, x_test, y_train, y_test = train_test_split(xs, ys,
-                                                        random_state=420)
-    x_train.index = range(len(x_train.index))
-    y_train.index = range(len(y_train.index))
-    x_test.index = range(len(x_test.index))
-    y_test.index = range(len(y_test.index))
-    print(x_train)
-    print(y_train)
-    clf = LogisticRegression(random_state=420, penalty="l2", max_iter=100).fit(
-        x_train, y_train)
+    x_train, x_test, y_train, y_test = preprocessing(new_data)
+
+    clf = LogisticRegression(random_state=420, penalty="l2", max_iter=100,
+                             class_weight="auto", n_jobs=-1,
+                             solver="lbfgs").fit(x_train, y_train)
+
     print(clf.score(x_test, y_test))
+    scores = cross_val_score(clf, x_train, y_train, cv=5)
+    print(scores)
+    # para_grid = {}
+    # grid_search = GridSearchCV(clf, para_grid, cv=5,
+    #                            scoring='neg_mean_squared_error')
+    clf_xgb = GradientBoostingClassifier(random_state=420) \
+        .fit(x_train, y_train)
+    print(clf_xgb.score(x_test, y_test))
+    scores = cross_val_score(clf_xgb, x_train, y_train, cv=5)
+    print(scores.mean())
