@@ -10,7 +10,8 @@ from sklearn.preprocessing import StandardScaler
 
 
 def read():
-    temp_data = pd.read_csv("D:/360安全浏览器下载/demo案例附件/data.csv", encoding="gbk")
+    temp_data = pd.read_csv("D:/360安全浏览器下载/demo案例附件/data.csv",
+                            encoding="gbk")
     print(temp_data.head())
     print(temp_data.shape)
     print(temp_data.describe())
